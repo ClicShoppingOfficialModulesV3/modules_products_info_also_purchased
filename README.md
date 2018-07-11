@@ -14,6 +14,8 @@ Via the installation system administration ClicShopping
 
 Technical Prerequisites: None
 
+Lisence : GPL 2 - MIT
+
 Modules:
 
 - Compatibility: >= version 3.0
