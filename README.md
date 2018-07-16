@@ -31,4 +31,7 @@ Install :
 - Menu design / Products description
 - https://monsite/myAdmin/modules.php?set=modules_products_info
 
+- Copy the modules_products_info_also_purchased.json into ClicShopping/Work/Cache/Github (manual installation)
+
+
 
