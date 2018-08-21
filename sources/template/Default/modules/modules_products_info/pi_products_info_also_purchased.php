@@ -1,10 +1,13 @@
 <?php
 /**
- * pi_products_info_also_purchased.php
- * @copyright Copyright 2008 - http://www.innov-concept.com
- * @Brand : ClicShopping(Tm) at Inpi all right Reserved
- * @license Licensed GPL2
-*/
+ *
+ *  @copyright 2008 - https://www.clicshopping.org
+ *  @Brand : ClicShopping(Tm) at Inpi all right Reserved
+ *  @Licence GPL 2 & MIT
+ *  @licence MIT - Portion of osCommerce 2.4
+ *
+ *
+ */
 
   use ClicShopping\OM\HTML;
   use ClicShopping\OM\DateTime;
@@ -52,10 +55,10 @@
                                                    p.products_image,
                                                    p.products_image_medium,
                                                    p.products_quantity as in_stock
-                                            from orders_products opa,
-                                                 orders_products opb,
-                                                 orders o,
-                                                 products p
+                                            from :table_orders_products opa,
+                                                 :table_orders_products opb,
+                                                 :table_orders o,
+                                                 :table_products p
                                             where opa.products_id = :products_id
                                             and opa.orders_id = opb.orders_id
                                             and opb.products_id <> :products_id
