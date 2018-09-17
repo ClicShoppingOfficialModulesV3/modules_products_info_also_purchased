@@ -130,7 +130,7 @@
 
           if (MODULE_PRODUCTS_INFO_ALSO_PURCHASED_TITLE == 'True') {
             $new_prods_content .= '<div>';
-            $new_prods_content .= '<div class="page-header ModuleProductsInfoAlsoPurchasedHeading"><span class="ModuleProductsInfoAlsoPurchasedHeading"><h2>' . sprintf(MODULE_PRODUCTS_INFO_ALSO_PURCHASED_NAME, strftime('%B')) . '</h2></span></div>';
+            $new_prods_content .= '<div class="page-header ModuleProductsInfoAlsoPurchasedHeading"><span class="ModuleProductsInfoAlsoPurchasedHeading"><h2>' . sprintf(CLICSHOPPING::getDef('module_products_info_also_purchased_name'), strftime('%B')) . '</h2></span></div>';
             $new_prods_content .= '</div>';
           }
 
@@ -174,7 +174,7 @@
                 $submit_button = '';
 
                 if ($CLICSHOPPING_ProductsCommon->getHasProductAttributes($products_id) === false) {
-                  $form =  HTML::form('cart_quantity', CLICSHOPPING::link('index.php', 'Cart&Add' ),'post','', ['tokenize' => true]). "\n";
+                  $form =  HTML::form('cart_quantity', CLICSHOPPING::link('index.php', 'Cart&Add' ),'post','class="form-inline justify-content-center"', ['tokenize' => true]). "\n";
                   $form .= HTML::hiddenField('products_id', $products_id);
                   if (isset($_GET['Description'])) $form .= HTML::hiddenField('url', 'Products&Description');
                   $endform = '</form>';
@@ -307,7 +307,7 @@
       $CLICSHOPPING_Db->save('configuration', [
           'configuration_title' => 'Quel type de template souhaitez-vous voir affiché ?',
           'configuration_key' => 'MODULE_PRODUCTS_INFO_ALSO_PURCHASED_TEMPLATE',
-          'configuration_value' => 'template_boostrap_column_5.php',
+          'configuration_value' => 'template_bootstrap_column_5.php',
           'configuration_description' => 'Veuillez indiquer le type de template que vous souhaitez voir affiché.<br /><br /><b>Note :</b><br /> - Si vous avez opt&eacute; pour une configuration en ligne, veuillez choisir un type de nom de template comme <u>template_line</u>.<br /><br /> - Si vous avez opt&eacute; pour un affichage en colonne, veuillez choisir un type de nom de template comme <u>template_column</u> puis veuillez configurer le nombre de colonnes.<br />',
           'configuration_group_id' => '6',
           'sort_order' => '2',
