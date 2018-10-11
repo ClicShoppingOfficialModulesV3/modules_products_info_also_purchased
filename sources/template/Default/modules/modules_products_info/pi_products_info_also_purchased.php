@@ -13,7 +13,6 @@
   use ClicShopping\OM\DateTime;
   use ClicShopping\OM\Registry;
   use ClicShopping\OM\CLICSHOPPING;
-  use ClicShopping\Sites\ClicShoppingAdmin\TemplateAdmin;
 
   class pi_products_info_also_purchased {
     public $code;
@@ -43,6 +42,7 @@
         $CLICSHOPPING_ProductsCommon = Registry::get('ProductsCommon');
         $CLICSHOPPING_Template = Registry::get('Template');
         $CLICSHOPPING_ProductsFunctionTemplate = Registry::get('ProductsFunctionTemplate');
+        $CLICSHOPPING_ProductsAttributes = Registry::get('ProductsAttributes');
 
         $products_id = $CLICSHOPPING_ProductsCommon->getID();
 
@@ -160,7 +160,7 @@
               $input_quantity = '';
 
               if ($CLICSHOPPING_ProductsCommon->getProductsAllowingToInsertQuantity($products_id) !='' ) {
-                  if ($CLICSHOPPING_ProductsCommon->getHasProductAttributes($products_id) === false) {
+                  if ($CLICSHOPPING_ProductsAttributes->getHasProductAttributes($products_id) === false) {
                     $input_quantity = CLICSHOPPING::getDef('text_customer_quantity')  . ' ' . $CLICSHOPPING_ProductsCommon->getProductsAllowingToInsertQuantity();
                 }
               }
@@ -171,7 +171,7 @@
               if ($CLICSHOPPING_ProductsCommon->getProductsMinimumQuantity($products_id) != 0 && $CLICSHOPPING_ProductsCommon->getProductsQuantity($products_id) != 0) {
                 $submit_button = '';
 
-                if ($CLICSHOPPING_ProductsCommon->getHasProductAttributes($products_id) === false) {
+                if ($CLICSHOPPING_ProductsAttributes->getHasProductAttributes($products_id) === false) {
                   $form =  HTML::form('cart_quantity', CLICSHOPPING::link('index.php', 'Cart&Add' ),'post','class="form-inline justify-content-center"', ['tokenize' => true]). "\n";
                   $form .= HTML::hiddenField('products_id', $products_id);
                   if (isset($_GET['Description'])) $form .= HTML::hiddenField('url', 'Products&Description');
