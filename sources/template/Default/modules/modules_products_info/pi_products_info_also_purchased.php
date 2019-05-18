@@ -107,7 +107,7 @@
 
            $Qproducts->bindInt(':products_id', $CLICSHOPPING_ProductsCommon->getID());
            $Qproducts->bindInt(':customers_group_id', (int)$CLICSHOPPING_Customer->getCustomersGroupID());
-           $Qproducts->bindInt(':limit', MODULE_PRODUCTS_INFO_CROSS_SELL_MAX_DISPLAY);
+           $Qproducts->bindInt(':limit', MODULE_PRODUCTS_INFO_ALSO_PURCHASED_MAX_DISPLAY);
            $Qproducts->execute();
         }
 
@@ -176,10 +176,11 @@
 // **************************
 // display the differents buttons before minorder qty
 // **************************
-              if ($CLICSHOPPING_ProductsCommon->getProductsMinimumQuantity($products_id) != 0 && $CLICSHOPPING_ProductsCommon->getProductsQuantity($products_id) != 0) {
-                $submit_button = '';
-                $form = '';
+              $submit_button = '';
+              $form = '';
+              $endform = '';
 
+              if ($CLICSHOPPING_ProductsCommon->getProductsMinimumQuantity($products_id) != 0 && $CLICSHOPPING_ProductsCommon->getProductsQuantity($products_id) != 0) {
                 if ($CLICSHOPPING_ProductsAttributes->getHasProductAttributes($products_id) === false) {
                   $form =  HTML::form('cart_quantity', CLICSHOPPING::link(null, 'Cart&Add' ),'post','class="justify-content-center"', ['tokenize' => true]). "\n";
                   $form .= HTML::hiddenField('products_id', $products_id);
@@ -218,7 +219,7 @@
 // See the button more view details
                 $button_small_view_details = HTML::button(CLICSHOPPING::getDef('button_details'), null, CLICSHOPPING::link($products_name_url, 'info', null, 'sm'));
 // 10 - Display the image
-                $products_image = HTML::link($products_name_url, HTML::image($CLICSHOPPING_Template->getDirectoryTemplateImages() . $Qproducts->value('products_image'), HTML::outputProtected($Qproducts->value('products_name')), MODULE_PRODUCTS_INFO_CROSS_SELL_IMAGE_WIDTH, MODULE_PRODUCTS_INFO_CROSS_SELL_IMAGE_HEIGHT, null, true));
+                $products_image = HTML::link($products_name_url, HTML::image($CLICSHOPPING_Template->getDirectoryTemplateImages() . $Qproducts->value('products_image'), HTML::outputProtected($Qproducts->value('products_name')), MODULE_PRODUCTS_INFO_ALSO_PURCHASED_IMAGE_WIDTH, MODULE_PRODUCTS_INFO_ALSO_PURCHASED_IMAGE_HEIGHT, null, true));
 //Ticker Image
               $products_image .= $CLICSHOPPING_ProductsFunctionTemplate->getTicker(MODULE_PRODUCTS_INFO_ALSO_PURCHASED_TICKER, $products_id, 'ModulesProductsInfoBootstrapTickerSpecial', 'ModulesProductsInfoBootstrapTickerFavorite', 'ModulesProductsInfoBootstrapTickerFeatured', 'ModulesProductsInfoBootstrapTickerNew');
 
@@ -234,6 +235,8 @@
                 $products_manufacturers = $CLICSHOPPING_ProductsFunctionTemplate->getProductsManufacturer($products_id);
 // display the price by kilo
                 $product_price_kilo = $CLICSHOPPING_ProductsFunctionTemplate->getProductsPriceByWeight($products_id);
+// products_price
+              $product_price = '';
 // display date available
                 $products_date_available =  $CLICSHOPPING_ProductsFunctionTemplate->getProductsDateAvailable($products_id);
 // display products only shop
