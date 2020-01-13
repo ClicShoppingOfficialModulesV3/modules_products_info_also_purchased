@@ -43,6 +43,7 @@
         $CLICSHOPPING_Template = Registry::get('Template');
         $CLICSHOPPING_ProductsFunctionTemplate = Registry::get('ProductsFunctionTemplate');
         $CLICSHOPPING_ProductsAttributes = Registry::get('ProductsAttributes');
+        $CLICSHOPPING_Reviews = Registry::get('Reviews');
 
          if ($CLICSHOPPING_Customer->getCustomersGroupID() == 0) {
            $Qproducts = $CLICSHOPPING_Db->prepare('select p.products_id,
@@ -134,7 +135,7 @@
 
           if (MODULE_PRODUCTS_INFO_ALSO_PURCHASED_TITLE == 'True') {
             $new_prods_content .= '<div>';
-            $new_prods_content .= '<div class="page-header ModuleProductsInfoAlsoPurchasedHeading"><span class="ModuleProductsInfoAlsoPurchasedHeading"><h2>' . sprintf(CLICSHOPPING::getDef('module_products_info_also_purchased_name'), strftime('%B')) . '</h2></span></div>';
+            $new_prods_content .= '<div class="page-title ModuleProductsInfoAlsoPurchasedHeading"><span class="ModuleProductsInfoAlsoPurchasedHeading"><h2>' . sprintf(CLICSHOPPING::getDef('module_products_info_also_purchased_name'), strftime('%B')) . '</h2></span></div>';
             $new_prods_content .= '</div>';
           }
 
@@ -142,9 +143,7 @@
           $new_prods_content .= '<div class="d-flex flex-wrap">';
 
             while ($Qproducts->fetch() ) {
-
-              $products_id = $Qproducts->valueInt('products_related_id_slave');
-              $in_stock = $Qproducts->valueInt('in_stock');
+              $products_id = $Qproducts->valueInt('products_id');
 
               $products_name_url = $CLICSHOPPING_ProductsFunctionTemplate->getProductsUrlRewrited()->getProductNameUrl($products_id);
 //product name
@@ -217,7 +216,7 @@
               }
 
 // See the button more view details
-                $button_small_view_details = HTML::button(CLICSHOPPING::getDef('button_details'), null, CLICSHOPPING::link($products_name_url, 'info', null, 'sm'));
+                $button_small_view_details = HTML::button(CLICSHOPPING::getDef('button_details'), null, CLICSHOPPING::link($products_name_url), 'info', null, 'sm');
 // 10 - Display the image
                 $products_image = HTML::link($products_name_url, HTML::image($CLICSHOPPING_Template->getDirectoryTemplateImages() . $Qproducts->value('products_image'), HTML::outputProtected($Qproducts->value('products_name')), MODULE_PRODUCTS_INFO_ALSO_PURCHASED_IMAGE_WIDTH, MODULE_PRODUCTS_INFO_ALSO_PURCHASED_IMAGE_HEIGHT, null, true));
 //Ticker Image
@@ -260,6 +259,8 @@
             $products_volume = $CLICSHOPPING_ProductsFunctionTemplate->getProductsVolume($products_id);
 // display products weight
             $products_weight = $CLICSHOPPING_ProductsFunctionTemplate->getProductsWeight($products_id);
+// Reviews
+              $total_reviews = '<span class="ModulesReviews" itemprop="ratingValue">' . HTML::stars($CLICSHOPPING_Reviews->getoverallReviewsbyProducts($products_id)) . '</span>';
 
 //******************************************************************************************************************
 //            End Options -- activate and insert code in template and css
@@ -304,10 +305,10 @@
       $CLICSHOPPING_Db = Registry::get('Db');
 
       $CLICSHOPPING_Db->save('configuration', [
-          'configuration_title' => 'Souhaitez-vous activer ce module ?',
+          'configuration_title' => 'Do you want to enable this module ?',
           'configuration_key' => 'MODULE_PRODUCTS_INFO_ALSO_PURCHASED_STATUS',
           'configuration_value' => 'True',
-          'configuration_description' => 'Souhaitez vous activer ce module à votre boutique ?',
+          'configuration_description' => 'Do you want to enable this module in your shop ?',
           'configuration_group_id' => '6',
           'sort_order' => '1',
           'set_function' => 'clic_cfg_set_boolean_value(array(\'True\', \'False\'))',
@@ -316,10 +317,10 @@
       );
 
       $CLICSHOPPING_Db->save('configuration', [
-          'configuration_title' => 'Quel type de template souhaitez-vous voir affiché ?',
+          'configuration_title' => 'What type of template would you like to see displayed?',
           'configuration_key' => 'MODULE_PRODUCTS_INFO_ALSO_PURCHASED_TEMPLATE',
           'configuration_value' => 'template_bootstrap_column_5.php',
-          'configuration_description' => 'Veuillez indiquer le type de template que vous souhaitez voir affiché.<br /><br /><b>Note :</b><br /> - Si vous avez opté pour une configuration en ligne, veuillez choisir un type de nom de template comme <u>template_line</u>.<br /><br /> - Si vous avez opté pour un affichage en colonne, veuillez choisir un type de nom de template comme <u>template_column</u> puis veuillez configurer le nombre de colonnes.<br />',
+          'configuration_description' => 'Please indicate the type of template you would like displayed. <br /> <br /> <b> Note </b> <br /> - If you have opted for an online configuration, please choose a type of name. template like <u> template_line </u>. <br /> <br /> - If you opted for a column display, please choose a type of template name like <u> template_column </u> and then configure the number of columns. <br />',
           'configuration_group_id' => '6',
           'sort_order' => '2',
           'set_function' => 'clic_cfg_set_multi_template_pull_down',
@@ -328,10 +329,10 @@
       );
 
       $CLICSHOPPING_Db->save('configuration', [
-          'configuration_title' => 'Souhaitez-vous afficher le titre ?',
+          'configuration_title' => 'Do you want to display the title?',
           'configuration_key' => 'MODULE_PRODUCTS_INFO_ALSO_PURCHASED_TITLE',
           'configuration_value' => 'True',
-          'configuration_description' => 'Affiche le titre du module dans le catalogue<br /><br /><i>(Valeur True = Oui - Valeur False = Non</i>)',
+          'configuration_description' => 'Displays the title of the module in the catalog',
           'configuration_group_id' => '6',
           'sort_order' => '3',
           'set_function' => 'clic_cfg_set_boolean_value(array(\'True\', \'False\'))',
@@ -340,10 +341,10 @@
       );
 
       $CLICSHOPPING_Db->save('configuration', [
-          'configuration_title' => 'Indiquer le nombre de nouveaux produits à afficher sur la page d\'accueil',
+          'configuration_title' => 'Indicate the number of new products to display on the home page',
           'configuration_key' => 'MODULE_PRODUCTS_INFO_ALSO_PURCHASED_MAX_DISPLAY',
           'configuration_value' => '6',
-          'configuration_description' => 'Veuillez indiquer le nombre maximum de nouveaux produits à afficher.',
+          'configuration_description' => 'Please indicate the maximum number of new products to display.',
           'configuration_group_id' => '6',
           'sort_order' => '5',
           'set_function' => '',
@@ -352,10 +353,10 @@
       );
 
       $CLICSHOPPING_Db->save('configuration', [
-          'configuration_title' => 'Veuillez indiquer le nombre de colonnes de produit que vous souhaitez voir affiché  ?',
+          'configuration_title' => 'Please indicate the number of product columns you would like displayed?',
           'configuration_key' => 'MODULE_PRODUCTS_INFO_ALSO_PURCHASED_COLUMNS',
           'configuration_value' => '6',
-          'configuration_description' => 'Veuillez indiquer le nombre de colonnes de produit à afficher par ligne.<br /><br />Note:<br /><br />- Entre 1 et 12',
+          'configuration_description' => 'Please indicate the number of product columns to display per line. <br /> <br /> Note: <br /> <br /> - Between 1 and 12',
           'configuration_group_id' => '6',
           'sort_order' => '6',
           'set_function' => 'clic_cfg_set_content_module_width_pull_down',
@@ -364,10 +365,10 @@
       );
 
       $CLICSHOPPING_Db->save('configuration', [
-          'configuration_title' => 'Souhaitez vous afficher une description courte des produits dans la page ?',
+          'configuration_title' => 'Do you want to display a short description of the products on the page?',
           'configuration_key' => 'MODULE_PRODUCTS_INFO_ALSO_PURCHASED_SHORT_DESCRIPTION',
           'configuration_value' => '0',
-          'configuration_description' => 'Veuillez indiquer la longueur de cette description.<br /><br /><i>- 0 pour aucune description<br>- 50 pour les 50 premiers caractères</i>',
+          'configuration_description' => 'Please indicate the length of this description. <br /> <br /> <i> - 0 for no description <br> - 50 for the first 50 characters </i>',
           'configuration_group_id' => '6',
           'sort_order' => '7',
           'set_function' => '',
@@ -376,10 +377,10 @@
       );
 
       $CLICSHOPPING_Db->save('configuration', [
-          'configuration_title' => 'Souhaitez-vous supprimer une certaine longeur de texte descriptif ',
+          'configuration_title' => 'Do you want to delete a certain length of descriptive text?',
           'configuration_key' => 'MODULE_PRODUCTS_INFO_ALSO_PURCHASED_SHORT_DESCRIPTION_DELETE_WORLDS',
           'configuration_value' => '0',
-          'configuration_description' => 'Veuillez indiquer le nombre de mots à supprimer. Ce système est utile avec le module des onglets<br /><br /><i>- 0 pour aucune suppression<br>- 50 pour les 50 premiers caractères</i>',
+          'configuration_description' => 'Please indicate the number of words to delete. This system is useful with the tab module <br /> <br /> <i> - 0 for no deletion <br /> - 50 for the first 50 characters </i>',
           'configuration_group_id' => '6',
           'sort_order' => '8',
           'set_function' => '',
@@ -388,10 +389,10 @@
       );
 
       $CLICSHOPPING_Db->save('configuration', [
-          'configuration_title' => 'Souhaitez-vous afficher un message Nouveauté / Promotion /  Sélection / Coups de coeur?',
+          'configuration_title' => 'Do you want to display a message New / Special / Featured / Favorites?',
           'configuration_key' => 'MODULE_PRODUCTS_INFO_ALSO_PURCHASED_TICKER',
           'configuration_value' => 'False',
-          'configuration_description' => 'Afficher un message Nouveauté / Promotion / Sélection / Coups de coeur en surimpression sur l\'image du produit ?<br /><br />la durée est paramétrable dans le Menu configuration / ma boutique / Valeurs minimales / maximales<br><br><i>(Valeur true = Oui - Valeur false = Non)</i>',
+          'configuration_description' => 'Display a message New / Promotion / Selection / Favorites superimposed on the image of the product? <br /> <br /> the duration is configurable in the Configuration menu / my shop / Minimum / maximum values <br /> < br /> <i> (Value true = Yes - Value false = No) </i>',
           'configuration_group_id' => '6',
           'sort_order' => '9',
           'set_function' => 'clic_cfg_set_boolean_value(array(\'True\', \'False\'))',
@@ -400,10 +401,10 @@
       );
 
       $CLICSHOPPING_Db->save('configuration', [
-          'configuration_title' => 'Souhaitez-vous afficher le pourcentage de réduction du prix (promotion) ?',
+          'configuration_title' => 'Would you like to display the percentage reduction of the price (special) ?',
           'configuration_key' => 'MODULE_PRODUCTS_INFO_ALSO_PURCHASED_POURCENTAGE_TICKER',
           'configuration_value' => 'False',
-          'configuration_description' => 'Afficher le pourcentage de réduction du prix<br><i>(Valeur true = Oui - Valeur false = Non)</i>',
+          'configuration_description' => 'Show the percentage reduction of the price',
           'configuration_group_id' => '6',
           'sort_order' => '1',
           'set_function' => 'clic_cfg_set_boolean_value(array(\'True\', \'False\'))',
@@ -412,10 +413,10 @@
       );
 
       $CLICSHOPPING_Db->save('configuration', [
-          'configuration_title' => 'Souhaitez-vous afficher une image concernant l\'état du stock du produit ?',
+          'configuration_title' => 'Would you like to display an image regarding the stock status of the product ?',
           'configuration_key' => 'MODULE_PRODUCTS_INFO_ALSO_PURCHASED_DISPLAY_STOCK',
           'configuration_value' => 'none',
-          'configuration_description' => 'Est-que vous souhaitez afficher une image indiquant une information sur le stock du produit (En stock, pratiquement épuisé, hors stock) ?',
+          'configuration_description' => 'Do you want to display an image indicating information on the stock of the product (In stock, practically sold out, out of stock) ?',
           'configuration_group_id' => '6',
           'sort_order' => '10',
           'set_function' => 'clic_cfg_set_boolean_value(array(\'none\', \'image\', \'number\'))',
@@ -436,7 +437,7 @@
       );
 
       $CLICSHOPPING_Db->save('configuration', [
-          'configuration_title' => 'Ordre de tri d\'affichage',
+          'configuration_title' => 'Image height',
           'configuration_key' => 'MODULE_PRODUCTS_INFO_ALSO_PURCHASED_IMAGE_HEIGHT',
           'configuration_value' => '',
           'configuration_description' => 'Veuillez indiquer la hauteur des images qui seront affichées<br /><br /><strong>Note :</strong><br>Si le champs est vide, la taille de l\'image aura sa taille réelle. A défaut, elle sera recalculée en fonction de la nouvelle taille insérée',
@@ -448,19 +449,15 @@
       );
 
       $CLICSHOPPING_Db->save('configuration', [
-          'configuration_title' => 'Ordre de tri d\'affichage',
+          'configuration_title' => 'Sort order',
           'configuration_key' => 'MODULE_PRODUCTS_INFO_ALSO_PURCHASED_SORT_ORDER',
           'configuration_value' => '2000',
-          'configuration_description' => 'Ordre de tri pour l\'affichage (Le plus petit nombre est montré en premier)',
+          'configuration_description' => 'Sort order of display. Lowest is displayed first. The sort order must be different on every module',
           'configuration_group_id' => '6',
           'sort_order' => '12',
           'set_function' => '',
           'date_added' => 'now()'
         ]
-      );
-
-      return $CLICSHOPPING_Db->save('configuration', ['configuration_value' => '1'],
-        ['configuration_key' => 'WEBSITE_MODULE_INSTALLED']
       );
     }
 
