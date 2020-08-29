@@ -17,10 +17,10 @@
   class pi_products_info_also_purchased {
     public $code;
     public $group;
-    public $title;
-    public $description;
-    public $sort_order;
-    public $enabled = false;
+    public string $title;
+    public string $description;
+    public ?int $sort_order = 0;
+    public bool $enabled = false;
 
     public function __construct() {
       $this->code = get_class($this);
@@ -36,7 +36,7 @@
     }
 
     public function execute() {
-      if (isset($_GET['Description']) && isset($_GET['Products']) ) {
+      if (isset($_GET['Description']) && isset($_GET['Products'])) {
         $CLICSHOPPING_Customer = Registry::get('Customer');
         $CLICSHOPPING_Db = Registry::get('Db');
         $CLICSHOPPING_ProductsCommon = Registry::get('ProductsCommon');
@@ -142,7 +142,7 @@
           $new_prods_content .= '<div class="ModuleProductsInfoAlsoPurchasedContainer">';
           $new_prods_content .= '<div class="d-flex flex-wrap">';
 
-            while ($Qproducts->fetch() ) {
+            while ($Qproducts->fetch()) {
               $products_id = $Qproducts->valueInt('products_id');
 
               $products_name_url = $CLICSHOPPING_ProductsFunctionTemplate->getProductsUrlRewrited()->getProductNameUrl($products_id);
@@ -181,7 +181,7 @@
 
               if ($CLICSHOPPING_ProductsCommon->getProductsMinimumQuantity($products_id) != 0 && $CLICSHOPPING_ProductsCommon->getProductsQuantity($products_id) != 0) {
                 if ($CLICSHOPPING_ProductsAttributes->getHasProductAttributes($products_id) === false) {
-                  $form =  HTML::form('cart_quantity', CLICSHOPPING::link(null, 'Cart&Add' ),'post','class="justify-content-center"', ['tokenize' => true]). "\n";
+                  $form = HTML::form('cart_quantity', CLICSHOPPING::link(null, 'Cart&Add' ),'post','class="justify-content-center"', ['tokenize' => true]). "\n";
                   $form .= HTML::hiddenField('products_id', $products_id);
                   if (isset($_GET['Description'])) $form .= HTML::hiddenField('url', 'Products&Description');
                   $endform = '</form>';
