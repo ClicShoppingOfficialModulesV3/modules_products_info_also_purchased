@@ -15,10 +15,10 @@
   use ClicShopping\OM\CLICSHOPPING;
 
   class pi_products_info_also_purchased {
-    public $code;
+    public string $code;
     public $group;
-    public string $title;
-    public string $description;
+    public $title;
+    public $description;
     public ?int $sort_order = 0;
     public bool $enabled = false;
 
@@ -36,7 +36,7 @@
     }
 
     public function execute() {
-      if (isset($_GET['Description']) && isset($_GET['Products'])) {
+      if (isset($_GET['Description'], $_GET['Products'])) {
         $CLICSHOPPING_Customer = Registry::get('Customer');
         $CLICSHOPPING_Db = Registry::get('Db');
         $CLICSHOPPING_ProductsCommon = Registry::get('ProductsCommon');
