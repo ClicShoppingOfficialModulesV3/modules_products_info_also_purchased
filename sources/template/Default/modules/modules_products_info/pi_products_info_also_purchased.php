@@ -16,7 +16,7 @@
 
   class pi_products_info_also_purchased {
     public string $code;
-    public $group;
+    public string $group;
     public $title;
     public $description;
     public ?int $sort_order = 0;
@@ -135,7 +135,7 @@
 
           if (MODULE_PRODUCTS_INFO_ALSO_PURCHASED_TITLE == 'True') {
             $new_prods_content .= '<div>';
-            $new_prods_content .= '<div class="page-title ModuleProductsInfoAlsoPurchasedHeading"><span class="ModuleProductsInfoAlsoPurchasedHeading"><h2>' . sprintf(CLICSHOPPING::getDef('module_products_info_also_purchased_name'), strftime('%B')) . '</h2></span></div>';
+            $new_prods_content .= '<div class="page-title ModuleProductsInfoAlsoPurchasedHeading"><span class="ModuleProductsInfoAlsoPurchasedHeading"><h2>' . sprintf(CLICSHOPPING::getDef('module_products_info_also_purchased_name'), DateTime::getNow(CLICSHOPPING::getDef('date_format_short'))) . '</h2></span></div>';
             $new_prods_content .= '</div>';
           }
 
